@@ -1,8 +1,3 @@
-
- |\__/,|   (`\
-_.|o o  |_   ) )
--(((---(((--------
-
 # webx preloader v1.0.0
 
 Minimalist entry screen with multi-layer bot protection and anti-tamper system.
