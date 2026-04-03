@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webx</title>
+    <style>
+        :root {
+            --bg-center: #0d0c0b;
+            --bg-outer: #050505;
+            --accent-main: #d6ccc2;
+            --accent-dim: #1a1918;
+            --bar-start: #8a817c;
+            --bar-end: #bcb4ad;
+            --error-color: #5e4343;
+            --font-main: 'Montserrat', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-outer) 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-main);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .view {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            animation: init 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes init {
+            0% { opacity: 0; transform: scale(0.99); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .visual {
+            margin-bottom: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.01); }
+        }
+
+        .visual img {
+            width: 165px;
+            height: auto;
+            display: block;
+            filter: sepia(0.1) contrast(1.05);
+        }
+
+        .status-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 35px;
+            height: 20px;
+            color: var(--accent-main);
+            font-size: 15px;
+            letter-spacing: 5px;
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+
+        .status-box::before {
+            content: '';
+            width: 25px; 
+            display: inline-block;
+        }
+
+        #st { transition: opacity 0.3s ease; }
+
+        .dots-wrap {
+            display: inline-block;
+            width: 25px;
+            text-align: left;
+            margin-left: 2px;
+            opacity: 0.5;
+        }
+
+        .track {
+            width: 210px;
+            height: 1px;
+            background: rgba(214, 204, 194, 0.05);
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--bar-start), var(--bar-end));
+            transition: width 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 60px;
+            font-size: 9px;
+            letter-spacing: 8px;
+            color: var(--accent-dim);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="view">
+    <div class="visual">
+        <img src="cat.gif" alt="cat" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span style="display:none; color:var(--accent-dim); letter-spacing:10px; font-size:11px;">cat</span>
+    </div>
+
+    <div class="status-box">
+        <span id="st">analyzing</span><span class="dots-wrap" id="dt"></span>
+    </div>
+    
+    <div class="track">
+        <div class="bar" id="pb"></div>
+    </div>
+</div>
+
+<div class="footer">webx &bull; 2026</div>
+
+<script>
+    const CONFIG = {
+        YOUR_SITE_URL: "https://your-website.com",
+        BOT_REDIRECT: "https://google.com",
+        STEP_1: "analyzing",
+        STEP_2: "verifying",
+        SUCCESS: "granted",
+        ERROR: "denied"
+    };
+
+    const st = document.getElementById('st');
+    const dt = document.getElementById('dt');
+    const pb = document.getElementById('pb');
+    let v = 0;
+    let d = 0;
+
+    const timer = setInterval(() => {
+        d = (d + 1) % 4;
+        dt.innerText = '.'.repeat(d);
+    }, 500);
+
+    function changeStatus(newText) {
+        if (st.innerText !== newText) {
+            st.style.opacity = 0;
+            setTimeout(() => {
+                st.innerText = newText;
+                st.style.opacity = 1;
+            }, 300);
+        }
+    }
+
+    function checkSystem() {
+        if (navigator.webdriver) return false;
+        if (!navigator.languages || navigator.languages.length === 0) return false;
+        if (window.outerWidth === 0 || window.outerHeight === 0) return false;
+        const isChrome = !!window.chrome;
+        if (isChrome && !window.chrome.runtime) {
+            if (navigator.plugins.length === 0) return false;
+        }
+        return true;
+    }
+
+    function run() {
+        v += Math.floor(Math.random() * 15) + 4;
+        if (v > 100) v = 100;
+        pb.style.width = v + '%';
+
+        if (v < 100) {
+            if (v > 40) changeStatus(CONFIG.STEP_2);
+            setTimeout(run, Math.random() * 500 + 200);
+        } else {
+            clearInterval(timer);
+            dt.innerText = '';
+            
+            if (!checkSystem()) {
+                st.style.opacity = 0;
+                setTimeout(() => {
+                    st.innerText = CONFIG.ERROR;
+                    st.style.color = getComputedStyle(document.documentElement).getPropertyValue('--error-color');
+                    st.style.opacity = 1;
+                    pb.style.background = getComputedStyle(document.documentElement).getPropertyValue('--error-color');
+                }, 300);
+                setTimeout(() => { window.location.href = CONFIG.BOT_REDIRECT; }, 1500);
+            } else {
+                st.style.opacity = 0;
+                setTimeout(() => {
+                    st.innerText = CONFIG.SUCCESS;
+                    st.style.color = '#f5ebe0';
+                    st.style.opacity = 1;
+                }, 300);
+                setTimeout(() => {
+                    window.location.href = CONFIG.YOUR_SITE_URL;
+                }, 1000);
+            }
+        }
+    }
+
+    setTimeout(run, 800);
+</script>
+
+</body>
+</html>
