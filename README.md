@@ -1,4 +1,4 @@
-# webx preloader v1.0.0
+# webx preloader v1.0.1
 
 Minimalist entry screen with multi-layer bot protection and anti-tamper system.
 
