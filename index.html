@@ -2,38 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>webx</title>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --bg-center: #0d0c0b;
-            --bg-outer: #050505;
-            --accent-main: #d6ccc2;
-            --accent-dim: #1a1918;
-            --bar-start: #8a817c;
-            --bar-end: #bcb4ad;
-            --error-color: #5e4343;
-            --font-main: 'Montserrat', sans-serif;
+            --bg: #0d0c0b;
+            --surface: #050505;
+            --text: #d6ccc2;
+            --text-dim: #1a1918;
+            --bar: #8a817c;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-outer) 100%);
+            background: radial-gradient(circle at center, var(--bg) 0%, var(--surface) 100%);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-main);
+            font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: "";
+            position: absolute; width: 100%; height: 100%;
+            top: 0; left: 0; opacity: 0.04; pointer-events: none;
+            background-image: url('https://vercel.app');
         }
 
         .view {
             text-align: center;
             width: 100%;
             max-width: 400px;
-            animation: init 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            animation: init 0.4s ease-out forwards;
         }
 
         @keyframes init {
@@ -43,17 +48,14 @@
 
         .visual {
             margin-bottom: 45px;
-            display: flex;
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 150px;
             animation: breathe 4s ease-in-out infinite;
         }
 
-        @keyframes breathe {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 0.9; transform: scale(1.01); }
-        }
+        @keyframes breathe { 0%, 100% { transform: translateY(0); opacity: 0.75; } 50% { transform: translateY(-10px); opacity: 0.95; } }
 
         .visual img {
             width: 165px;
@@ -66,33 +68,27 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 35px;
-            height: 20px;
-            color: var(--accent-main);
+            margin-bottom: 30px;
+            height: 24px;
+            color: var(--text);
             font-size: 15px;
-            letter-spacing: 5px;
+            letter-spacing: 6px;
             font-weight: 500;
             text-transform: lowercase;
         }
 
-        .status-box::before {
-            content: '';
-            width: 25px; 
-            display: inline-block;
-        }
+        .status-box::before { content: ''; width: 25px; display: inline-block; }
+        .dots { display: inline-block; width: 25px; text-align: left; margin-left: 2px; opacity: 0.3; }
 
-        #st { transition: opacity 0.3s ease; }
-
-        .dots-wrap {
-            display: inline-block;
-            width: 25px;
-            text-align: left;
-            margin-left: 2px;
-            opacity: 0.5;
+        .loader-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         .track {
-            width: 210px;
+            width: 200px;
             height: 1px;
             background: rgba(214, 204, 194, 0.05);
             margin: 0 auto;
@@ -101,40 +97,36 @@
         }
 
         .bar {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--bar-start), var(--bar-end));
-            transition: width 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
+            position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+            background: var(--bar); transition: width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
+        .pct { font-size: 7px; color: var(--text-dim); letter-spacing: 3px; }
+
         .footer {
-            position: absolute;
-            bottom: 60px;
-            font-size: 9px;
-            letter-spacing: 8px;
-            color: var(--accent-dim);
-            text-transform: uppercase;
-            font-weight: 500;
+            position: absolute; bottom: 60px;
+            font-size: 8px; letter-spacing: 8px;
+            color: #1a1918; text-transform: uppercase;
         }
+
+        .exit { opacity: 0; filter: blur(12px); transform: scale(0.94); transition: all 0.5s ease; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
 <div class="view">
     <div class="visual">
         <img src="cat.gif" alt="cat" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-        <span style="display:none; color:var(--accent-dim); letter-spacing:10px; font-size:11px;">cat</span>
+        <span style="display:none; color:var(--text-dim); font-size:10px; letter-spacing:5px;">[ cat_lost ]</span>
     </div>
 
     <div class="status-box">
         <span id="st">analyzing</span><span class="dots-wrap" id="dt"></span>
     </div>
     
-    <div class="track">
-        <div class="bar" id="pb"></div>
+    <div class="loader-wrap">
+        <div class="track"><div class="bar" id="pb"></div></div>
+        <div class="pct" id="pt">0%</div>
     </div>
 </div>
 
@@ -142,82 +134,70 @@
 
 <script>
     const CONFIG = {
-        YOUR_SITE_URL: "https://your-website.com",
-        BOT_REDIRECT: "https://google.com",
-        STEP_1: "analyzing",
-        STEP_2: "verifying",
-        SUCCESS: "granted",
-        ERROR: "denied"
+        URL: "https://your-website.com",
+        BOT: "https://google.com",
+        S1: "analyzing",
+        S2: "verifying",
+        OK: "granted",
+        ERR: "denied"
     };
+
+    function showLogo() {
+        console.clear();
+        const style = "color: #d1b1ba; font-family: Montserrat; font-size: 70px; font-weight: 800; text-shadow: 4px 4px 0px #0a0a0c; padding: 20px;";
+        for(let i=0; i<10; i++) console.log("%cWEBX", style);
+    }
 
     const st = document.getElementById('st');
     const dt = document.getElementById('dt');
     const pb = document.getElementById('pb');
+    const pt = document.getElementById('pt');
     let v = 0;
     let d = 0;
 
     const timer = setInterval(() => {
         d = (d + 1) % 4;
         dt.innerText = '.'.repeat(d);
+        if (window.outerHeight - window.innerHeight > 160 || window.outerWidth - window.innerWidth > 160) {
+            showLogo();
+            debugger;
+        }
     }, 500);
 
-    function changeStatus(newText) {
-        if (st.innerText !== newText) {
-            st.style.opacity = 0;
-            setTimeout(() => {
-                st.innerText = newText;
-                st.style.opacity = 1;
-            }, 300);
-        }
-    }
-
-    function checkSystem() {
-        if (navigator.webdriver) return false;
-        if (!navigator.languages || navigator.languages.length === 0) return false;
-        if (window.outerWidth === 0 || window.outerHeight === 0) return false;
-        const isChrome = !!window.chrome;
-        if (isChrome && !window.chrome.runtime) {
-            if (navigator.plugins.length === 0) return false;
-        }
-        return true;
-    }
-
     function run() {
-        v += Math.floor(Math.random() * 15) + 4;
+        v += Math.floor(Math.random() * 20) + 5;
         if (v > 100) v = 100;
         pb.style.width = v + '%';
+        pt.innerText = v + '%';
 
         if (v < 100) {
-            if (v > 40) changeStatus(CONFIG.STEP_2);
-            setTimeout(run, Math.random() * 500 + 200);
+            if (v > 45) st.innerText = CONFIG.S2;
+            setTimeout(run, Math.random() * 300 + 100);
         } else {
             clearInterval(timer);
             dt.innerText = '';
             
-            if (!checkSystem()) {
-                st.style.opacity = 0;
-                setTimeout(() => {
-                    st.innerText = CONFIG.ERROR;
-                    st.style.color = getComputedStyle(document.documentElement).getPropertyValue('--error-color');
-                    st.style.opacity = 1;
-                    pb.style.background = getComputedStyle(document.documentElement).getPropertyValue('--error-color');
-                }, 300);
-                setTimeout(() => { window.location.href = CONFIG.BOT_REDIRECT; }, 1500);
+            const isBot = navigator.webdriver || !navigator.languages.length || window.outerWidth === 0;
+            
+            if (isBot) {
+                st.innerText = CONFIG.ERR;
+                st.style.color = '#5e4343';
+                pb.style.background = '#5e4343';
+                setTimeout(() => { window.location.href = CONFIG.BOT; }, 1200);
             } else {
-                st.style.opacity = 0;
+                st.innerText = CONFIG.OK;
+                st.style.color = '#fff';
+                if (window.navigator.vibrate) window.navigator.vibrate(20); 
                 setTimeout(() => {
-                    st.innerText = CONFIG.SUCCESS;
-                    st.style.color = '#f5ebe0';
-                    st.style.opacity = 1;
-                }, 300);
-                setTimeout(() => {
-                    window.location.href = CONFIG.YOUR_SITE_URL;
-                }, 1000);
+                    document.body.classList.add('exit');
+                    setTimeout(() => { window.location.href = CONFIG.URL; }, 500);
+                }, 700);
             }
         }
     }
 
-    setTimeout(run, 800);
+    showLogo();
+    setTimeout(run, 600);
 </script>
 
 </body>
