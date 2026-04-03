@@ -7,11 +7,11 @@
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d0c0b;
+            --bg: #08080a;
             --surface: #050505;
-            --text: #d6ccc2;
-            --text-dim: #1a1918;
-            --bar: #8a817c;
+            --text: #e0e0e0;
+            --text-dim: #222222;
+            --bar: #555555;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -30,11 +30,14 @@
         body::before {
             content: "";
             position: absolute; width: 100%; height: 100%;
-            top: 0; left: 0; opacity: 0.04; pointer-events: none;
+            top: 0; left: 0; opacity: 0.03; pointer-events: none;
             background-image: url('https://vercel.app');
         }
 
         .view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
             width: 100%;
             max-width: 400px;
@@ -47,42 +50,42 @@
         }
 
         .visual {
-            margin-bottom: 45px;
+            margin-bottom: 40px;
             position: relative;
-            display: inline-flex;
-            flex-direction: column;
+            height: 160px;
+            display: flex;
             align-items: center;
-            animation: breathe 4s ease-in-out infinite;
+            justify-content: center;
         }
-
-        @keyframes breathe { 0%, 100% { transform: translateY(0); opacity: 0.75; } 50% { transform: translateY(-10px); opacity: 0.95; } }
 
         .visual img {
             width: 165px;
             height: auto;
-            display: block;
-            filter: sepia(0.1) contrast(1.05);
+            filter: grayscale(1) contrast(1.1);
+            animation: breathe 4s ease-in-out infinite;
         }
 
-        .visual::after {
-            content: '';
-            position: absolute; bottom: -15px; width: 70px; height: 8px;
-            background: rgba(0,0,0,0.6); border-radius: 50%;
-            filter: blur(8px);
+        @keyframes breathe { 
+            0%, 100% { transform: translateY(0); opacity: 0.75; } 
+            50% { transform: translateY(-10px); opacity: 0.95; } 
+        }
+
+        .status-wrap {
+            position: relative;
+            margin-bottom: 30px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .status-box {
-            position: relative;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 30px;
-            height: 24px;
             color: var(--text);
             font-size: 15px;
             letter-spacing: 6px;
             font-weight: 500;
             text-transform: lowercase;
+            position: relative;
         }
 
         .dots-wrap {
@@ -90,8 +93,9 @@
             left: 100%;
             width: 30px;
             text-align: left;
-            margin-left: 2px;
-            opacity: 0.3;
+            margin-left: 4px;
+            opacity: 0.2;
+            letter-spacing: 2px;
         }
 
         .loader-wrap {
@@ -104,8 +108,7 @@
         .track {
             width: 200px;
             height: 1px;
-            background: rgba(214, 204, 194, 0.05);
-            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
             position: relative;
             overflow: hidden;
         }
@@ -120,7 +123,7 @@
         .footer {
             position: absolute; bottom: 60px;
             font-size: 8px; letter-spacing: 8px;
-            color: #1a1918; text-transform: uppercase;
+            color: #151515; text-transform: uppercase;
         }
 
         .exit { opacity: 0; filter: blur(12px); transform: scale(0.94); transition: all 0.5s ease; }
@@ -134,8 +137,11 @@
         <span style="display:none; color:var(--text-dim); font-size:10px; letter-spacing:5px;">[ cat_lost ]</span>
     </div>
 
-    <div class="status-box">
-        <span id="st">analyzing</span><span class="dots-wrap" id="dt"></span>
+    <div class="status-wrap">
+        <div class="status-box">
+            <span id="st">analyzing</span>
+            <span class="dots-wrap" id="dt"></span>
+        </div>
     </div>
     
     <div class="loader-wrap">
@@ -147,9 +153,8 @@
 <div class="footer">webx &bull; 2026</div>
 
 <script>
-    /*  CONFIGURATION  */
     const CONFIG = {
-        URL: "https://github.com", // replace with your website URL
+        URL: "https://github.com", 
         BOT: "https://google.com",
         S1: "analyzing",
         S2: "verifying",
@@ -159,7 +164,7 @@
 
     function showLogo() {
         console.clear();
-        const style = "color: #d1b1ba; font-family: Montserrat; font-size: 70px; font-weight: 800; text-shadow: 4px 4px 0px #0a0a0c; padding: 20px;";
+        const style = "color: #e0e0e0; font-family: Montserrat; font-size: 70px; font-weight: 800; text-shadow: 4px 4px 0px #050505; padding: 20px;";
         for(let i=0; i<10; i++) console.log("%cWEBX", style);
     }
 
@@ -196,8 +201,8 @@
             
             if (isBot) {
                 st.innerText = CONFIG.ERR;
-                st.style.color = '#5e4343';
-                pb.style.background = '#5e4343';
+                st.style.color = '#5a3a3a';
+                pb.style.background = '#5a3a3a';
                 setTimeout(() => { window.location.href = CONFIG.BOT; }, 1200);
             } else {
                 st.innerText = CONFIG.OK;
