@@ -64,8 +64,16 @@
             filter: sepia(0.1) contrast(1.05);
         }
 
+        .visual::after {
+            content: '';
+            position: absolute; bottom: -15px; width: 70px; height: 8px;
+            background: rgba(0,0,0,0.6); border-radius: 50%;
+            filter: blur(8px);
+        }
+
         .status-box {
-            display: flex;
+            position: relative;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 30px;
@@ -77,8 +85,14 @@
             text-transform: lowercase;
         }
 
-        .status-box::before { content: ''; width: 25px; display: inline-block; }
-        .dots { display: inline-block; width: 25px; text-align: left; margin-left: 2px; opacity: 0.3; }
+        .dots-wrap {
+            position: absolute;
+            left: 100%;
+            width: 30px;
+            text-align: left;
+            margin-left: 2px;
+            opacity: 0.3;
+        }
 
         .loader-wrap {
             display: flex;
@@ -133,9 +147,9 @@
 <div class="footer">webx &bull; 2026</div>
 
 <script>
-     /*  CONFIGURATION  */
+    /*  CONFIGURATION  */
     const CONFIG = {
-        URL: "https://github.com/L1tty-ru/WebX", // replace with your website URL
+        URL: "https://github.com", // replace with your website URL
         BOT: "https://google.com",
         S1: "analyzing",
         S2: "verifying",
